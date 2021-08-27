@@ -3,6 +3,7 @@ package se.nackademin.java20.lab1.presentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import se.nackademin.java20.lab1.domain.Account;
 import se.nackademin.java20.lab1.domain.CreditAccount;
 import se.nackademin.java20.lab1.domain.DebitAccount;
 import se.nackademin.java20.lab1.service.IAccountService;
@@ -33,6 +34,14 @@ public class AccountController {
 
        return ResponseEntity.badRequest().body( new Exception("Nothing failed to create account"));
    }
+    @PostMapping("/deposit")
+    public Account deposit (long amount , Long accountNumber , Long clientId){
+       return accountService.deposit(amount,accountNumber,clientId);
+    }
+    @PostMapping("/withdraw")
+    public Account withdraw (long amount , Long accountNumber, Long clientId){
+        return null;
+    }
 
 
 

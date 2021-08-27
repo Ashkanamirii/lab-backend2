@@ -7,11 +7,6 @@ import lombok.NonNull;
 
 import javax.persistence.*;
 
-
-import java.util.Random;
-
-import static javax.persistence.GenerationType.AUTO;
-
 /**
  * Created by Ashkan Amiri
  * Date:  2021-08-25
@@ -27,7 +22,7 @@ import static javax.persistence.GenerationType.AUTO;
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="account_type",
 		discriminatorType = DiscriminatorType.STRING)
-public class Account {
+public abstract class Account {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,6 +45,9 @@ public class Account {
 		System.out.println(random_int);
 		return this.accountNumber = random_int;
 	}
+
+	public abstract long withdraw(long amount);
+	public abstract long deposit(long amount);
 
 //	@ManyToOne(cascade = CascadeType.ALL)
 //	@JoinColumn(name = "clients_id", referencedColumnName = "id")

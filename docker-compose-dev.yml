@@ -1,0 +1,30 @@
+version: "3.1"
+
+
+services:
+  my-sql:
+    image: mysql
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: lab1
+      MYSQL_PASSWORD: password
+  my_spring:
+    build: .
+    ports:
+      - 8080:8080
+    depends_on:
+      - my-sql
+    environment:
+      MYSQL_HOST: my-sql
+      DB_PORT: 3306
+      DB_NAME: lab1
+      DB_USER: root
+      DB_PASS: password
+      SPRING_PROFILES_ACTIVE: dev
+  risk-api:
+    container_name: risk-api
+    image: daneidmark/risk:0.0.1
+    ports:
+      - 8082:8080

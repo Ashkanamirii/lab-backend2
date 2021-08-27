@@ -1,7 +1,6 @@
 package se.nackademin.java20.lab1.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import se.nackademin.java20.lab1.domain.Account;
 import se.nackademin.java20.lab1.domain.Clients;
@@ -11,7 +10,6 @@ import se.nackademin.java20.lab1.persistance.AccountRepo;
 import se.nackademin.java20.lab1.persistance.ClientRepo;
 
 import javax.transaction.Transactional;
-import java.util.UUID;
 
 /**
  * Created by Ashkan Amiri
@@ -40,7 +38,7 @@ public class AccountServiceImpl implements IAccountService{
 
 		return account;
 	}
-
+	@Transactional
 	@Override
 	public DebitAccount createDebitAccount(DebitAccount debit, Long clientId) {
 		Clients client = clientRepo.findById(clientId).get();
@@ -49,14 +47,42 @@ public class AccountServiceImpl implements IAccountService{
 		client.addAccountToClient(account);
 		return account;
 	}
-
+	@Transactional
 	@Override
-	public ResponseEntity<?> Deposit(long amount, Long accountId, Long clientId) {
+	public Account deposit(long amount, Long accountNumber, Long clientId) {
+		Clients c = clientRepo.findById(clientId).get();
+		Account account = accountRepo.findByAccountNumber(accountNumber);
+
+		if (c.getAccounts().contains(account)){
+			 account.deposit(amount);
+			return accountRepo.save(account);
+		}
+    	return null;
+	}
+	@Transactional
+	@Override
+	public Account withdraw(long amount, Long accountNumber, Long clientId) {
+		Clients c = clientRepo.findById(clientId).get();
+		Account account = accountRepo.findByAccountNumber(accountNumber);
+
+		if (c.getAccounts().contains(account)){
+			account.withdraw(amount);
+			return accountRepo.save(account);
+		}
 		return null;
 	}
 
-	@Override
-	public ResponseEntity<?> Withdraw(long amount, Long accountId, Long clientId) {
-		return null;
-	}
+
+//	public long withdraw(long amount , long balance) {
+//		if (amount > balance) throw new IllegalStateException("Your amount must be less than your balance");
+//		long newBalance = balance - amount;
+//		if (newBalance <= 0) throw new IllegalStateException("Balance cannot be less than 0");
+//		return balance - amount;
+//	}
+//
+//
+//	public long deposit(long amount, long balance) {
+//		if (amount <= 0) throw new IllegalStateException("Amount can not be 0 and less than it");
+//		return balance + amount;
+//	}
 }

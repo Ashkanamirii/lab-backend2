@@ -51,7 +51,7 @@ public class CreditAccount extends Account {
 		return this.creditCard;
 	}
 
-
+	@Override
 	public long withdraw(long amount) {
 		if (amount > balance) throw new IllegalStateException("Your amount must be less than your balance");
 		long newBalance = balance - amount;
@@ -59,9 +59,10 @@ public class CreditAccount extends Account {
 		return this.balance = this.balance - amount;
 	}
 
-
+	@Override
 	public long deposit(long amount) {
 		if (amount <= 0) throw new IllegalStateException("Amount can not be 0 and less than it");
 		return this.balance = this.balance + amount;
 	}
+
 }

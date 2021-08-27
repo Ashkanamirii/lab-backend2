@@ -1,10 +1,8 @@
 package se.nackademin.java20.lab1.service;
 
-import org.springframework.http.ResponseEntity;
+import se.nackademin.java20.lab1.domain.Account;
 import se.nackademin.java20.lab1.domain.CreditAccount;
 import se.nackademin.java20.lab1.domain.DebitAccount;
-
-import java.util.UUID;
 
 /**
  * Created by Ashkan Amiri
@@ -16,6 +14,6 @@ import java.util.UUID;
 public interface IAccountService {
 	CreditAccount createCreditAccount(CreditAccount credit , Long clientId);
 	DebitAccount createDebitAccount(DebitAccount debit ,Long clientId);
-	ResponseEntity<?> Deposit (long amount , Long accountId, Long clientId);
-	ResponseEntity<?> Withdraw (long amount , Long accountId, Long clientId);
+	Account deposit (long amount , Long accountNumber , Long clientId);
+	Account withdraw (long amount , Long accountNumber, Long clientId);
 }

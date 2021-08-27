@@ -1,11 +1,3 @@
-FROM adoptopenjdk/openjdk11:alpine-jre
-
-ARG JAR_FILE=target/*.jar
-
-WORKDIR /myJavaDir
-
-COPY ${JAR_FILE} bank-app.jar
-
-EXPOSE 8080
-
-ENTRYPOINT ["java","-jar","bank-app.jar"]
+FROM openjdk:11
+COPY target/lab1-0.0.1-SNAPSHOT.jar app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]

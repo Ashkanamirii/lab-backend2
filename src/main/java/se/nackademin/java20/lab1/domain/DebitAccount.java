@@ -18,13 +18,14 @@ import javax.persistence.*;
 @DiscriminatorValue("DA")
 public class DebitAccount extends Account {
 
+	@Override
 	public long withdraw(long amount) {
-		long newBalance = balance - amount;
+		long newBalance = this.balance - amount;
 		if (newBalance < 0) throw new IllegalStateException("Balance cannot be less than 0");
-		return this.balance = (long) (this.balance - amount);
+		return this.balance =this.balance - amount;
 	}
 
-
+	@Override
 	public long deposit(long amount) {
 		return this.balance = this.balance + amount;
 	}

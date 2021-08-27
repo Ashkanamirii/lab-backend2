@@ -48,6 +48,10 @@ public class ClientServiceImpl implements IClientService{
 
 	@Override
 	public Clients authUser(String email, String password) {
+		Clients c = clientRepo.findByEmail(email);
+		if (c.getPassword().equalsIgnoreCase(password)) {
+			return c;
+		}
 		return null;
 	}
 
