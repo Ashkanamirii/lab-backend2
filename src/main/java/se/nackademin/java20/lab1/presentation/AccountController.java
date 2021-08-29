@@ -13,6 +13,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/account")
+@CrossOrigin(origins = "*")
 public class AccountController {
 
     @Autowired

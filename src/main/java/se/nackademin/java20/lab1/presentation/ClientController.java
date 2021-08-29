@@ -15,8 +15,10 @@ import java.util.List;
  * Project: lab1-master
  * Copyright: MIT
  */
+
 @RestController
 @RequestMapping("/client")
+@CrossOrigin(origins = "*")
 public class ClientController {
 
 	@Autowired

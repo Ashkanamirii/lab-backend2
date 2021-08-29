@@ -1,6 +1,8 @@
 package se.nackademin.java20.lab1.client;
 
+import org.junit.Ignore;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
@@ -20,7 +22,7 @@ class RestRiskClientTest {
 
 	private final String json = "{\"pass\":false}";
 
-
+	@Disabled
 	@Test
 	void canFetchAnforanden() {
 		RestTemplate restTemplate = new RestTemplate();
@@ -54,6 +56,7 @@ class RestRiskClientTest {
 		Assertions.assertEquals(json, jsonObject);
 	}
 
+	@Disabled
 	@Test
 	void rest() {
 		RestTemplate restTemplate = new RestTemplate();
