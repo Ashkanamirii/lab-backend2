@@ -38,7 +38,7 @@ public class ClientServiceImpl implements IClientService{
 
 	@Override
 	public Clients getById(Long id) {
-		return clientRepo.getById(id);
+		return clientRepo.findById(id).get();
 	}
 
 	@Override

@@ -1,8 +1,7 @@
 package se.nackademin.java20.lab1.client;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.Objects;
 
 /**
  * Created by Ashkan Amiri
@@ -11,11 +10,10 @@ import java.util.Objects;
  * Project: lab1-master
  * Copyright: MIT
  */
-public class RestRiskClient  implements RiskClient{
+public class RestRiskClient implements RiskClient {
 	private final RestTemplate restTemplate;
 	private final String baseUrl;
 
-	private static final String path = "/risk/ashkan";
 
 	public RestRiskClient(RestTemplate restTemplate, String baseUrl) {
 		this.restTemplate = restTemplate;
@@ -24,8 +22,15 @@ public class RestRiskClient  implements RiskClient{
 
 
 	@Override
-	public Risk fetchResult() {
-		return Objects.requireNonNull(restTemplate.getForEntity(baseUrl + path, RiskDTO.class)
-				.getBody()).getRisk();
+	public boolean isPassingCreditCheck(String userId) {
+
+		final ResponseEntity<RiskDTO> entity = restTemplate.
+				getForEntity(baseUrl + "/risk/" + userId, RiskDTO.class);
+		if (entity.getStatusCode().is2xxSuccessful()) {
+			return entity.getBody().getRisk().isPass();
+		}
+
+		throw new RuntimeException("Could not fetch risk assessment!");
 	}
+
 }

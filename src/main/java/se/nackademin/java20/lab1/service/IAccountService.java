@@ -3,6 +3,7 @@ package se.nackademin.java20.lab1.service;
 import se.nackademin.java20.lab1.domain.Account;
 import se.nackademin.java20.lab1.domain.CreditAccount;
 import se.nackademin.java20.lab1.domain.DebitAccount;
+import se.nackademin.java20.lab1.presentation.AccountDTO;
 
 /**
  * Created by Ashkan Amiri
@@ -12,8 +13,8 @@ import se.nackademin.java20.lab1.domain.DebitAccount;
  * Copyright: MIT
  */
 public interface IAccountService {
-	CreditAccount createCreditAccount(CreditAccount credit , Long clientId);
-	DebitAccount createDebitAccount(DebitAccount debit ,Long clientId);
-	Account deposit (long amount , Long accountNumber , Long clientId);
-	Account withdraw (long amount , Long accountNumber, Long clientId);
+	Account createCreditAccount(CreditAccount credit , Long clientId);
+	Account createDebitAccount(DebitAccount debit ,Long clientId);
+	Account deposit (AccountDTO accountInfo);
+	Account withdraw (AccountDTO accountInfo);
 }

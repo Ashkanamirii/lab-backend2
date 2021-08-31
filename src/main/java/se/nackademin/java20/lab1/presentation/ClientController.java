@@ -34,6 +34,11 @@ public class ClientController {
 		return  clientService.getClientList();
 	}
 
+	@GetMapping("/getById/{id}")
+	public Clients getById(@PathVariable(name = "id") Long id) {
+		return  clientService.getById(id);
+	}
+
 	@GetMapping("/auth")
 	public ResponseEntity<Clients> authUser(@RequestParam String email,
 	                                        @RequestParam String password) {

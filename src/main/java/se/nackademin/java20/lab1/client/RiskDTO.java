@@ -15,12 +15,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class RiskDTO {
 	private final Risk risk;
 
+	//{ "pass": true
+	//}
+
 	@JsonCreator
 	public RiskDTO(@JsonProperty("pass") Risk risk) {
 		this.risk = risk;
 	}
 
 	public Risk getRisk() {
-		return risk;
+		return this.risk;
 	}
 }

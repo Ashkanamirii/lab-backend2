@@ -8,5 +8,5 @@ package se.nackademin.java20.lab1.client;
  * Copyright: MIT
  */
 public interface RiskClient {
-	Risk fetchResult();
+	boolean isPassingCreditCheck(String userId);
 }

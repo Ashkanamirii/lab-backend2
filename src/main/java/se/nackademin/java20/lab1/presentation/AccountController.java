@@ -7,9 +7,6 @@ import se.nackademin.java20.lab1.domain.Account;
 import se.nackademin.java20.lab1.domain.CreditAccount;
 import se.nackademin.java20.lab1.domain.DebitAccount;
 import se.nackademin.java20.lab1.service.IAccountService;
-import se.nackademin.java20.lab1.service.IClientService;
-
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/account")
@@ -21,27 +18,27 @@ public class AccountController {
 
 
    @PostMapping("/create")
-   public ResponseEntity<Object> openAccount(@RequestBody CreateAccountDTO accountInfo) {
+   public ResponseEntity<Object> openAccount(@RequestBody AccountDTO accountInfo) {
 
        if(accountInfo.getAccountType().equalsIgnoreCase("DEBIT")){
            DebitAccount account = new DebitAccount();
-           account.setBalance(accountInfo.getBalance());
+           account.setBalance(accountInfo.getAmount());
            return ResponseEntity.ok(accountService.createDebitAccount(account,accountInfo.getClientId()));
        }else if (accountInfo.getAccountType().equalsIgnoreCase("CREDIT")){
            CreditAccount account = new CreditAccount();
-           account.setBalance(accountInfo.getBalance());
+           account.setBalance(accountInfo.getAmount());
            return ResponseEntity.ok(accountService.createCreditAccount(account,accountInfo.getClientId()));
        }
 
        return ResponseEntity.badRequest().body( new Exception("Nothing failed to create account"));
    }
     @PostMapping("/deposit")
-    public Account deposit (long amount , Long accountNumber , Long clientId){
-       return accountService.deposit(amount,accountNumber,clientId);
+    public Account deposit (@RequestBody AccountDTO accountInfo){
+       return accountService.deposit(accountInfo);
     }
     @PostMapping("/withdraw")
-    public Account withdraw (long amount , Long accountNumber, Long clientId){
-        return null;
+    public Account withdraw (@RequestBody AccountDTO accountInfo){
+        return accountService.withdraw(accountInfo);
     }
 
 

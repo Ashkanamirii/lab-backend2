@@ -28,9 +28,9 @@ class RestRiskClientTest {
 		RestTemplate restTemplate = new RestTemplate();
 		String baseUrl = new String("http://localhost:8082");
 		RiskClient restRegeringClient = new RestRiskClient(restTemplate, baseUrl);
-		Risk r = restRegeringClient.fetchResult();
-		System.out.println(r.isPass());
-		Assertions.assertTrue(r.isPass());
+		boolean r = restRegeringClient.isPassingCreditCheck("Ashkan");
+		System.out.println(r);
+		Assertions.assertTrue(r);
 
 
 	}

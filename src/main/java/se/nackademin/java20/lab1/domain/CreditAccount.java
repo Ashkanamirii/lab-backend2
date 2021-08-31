@@ -53,6 +53,7 @@ public class CreditAccount extends Account {
 
 	@Override
 	public long withdraw(long amount) {
+		if (amount <= 0) throw new IllegalStateException("Amount can not be 0 and less than it");
 		if (amount > balance) throw new IllegalStateException("Your amount must be less than your balance");
 		long newBalance = balance - amount;
 		if (newBalance <= 0) throw new IllegalStateException("Balance cannot be less than 0");

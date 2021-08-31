@@ -1,13 +1,15 @@
 package se.nackademin.java20.lab1.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import se.nackademin.java20.lab1.client.RiskClient;
 import se.nackademin.java20.lab1.domain.Account;
 import se.nackademin.java20.lab1.domain.Clients;
 import se.nackademin.java20.lab1.domain.CreditAccount;
 import se.nackademin.java20.lab1.domain.DebitAccount;
 import se.nackademin.java20.lab1.persistance.AccountRepo;
 import se.nackademin.java20.lab1.persistance.ClientRepo;
+import se.nackademin.java20.lab1.presentation.AccountDTO;
 
 import javax.transaction.Transactional;
 
@@ -19,70 +21,73 @@ import javax.transaction.Transactional;
  * Copyright: MIT
  */
 @Service
-@Transactional
-public class AccountServiceImpl implements IAccountService{
+@RequiredArgsConstructor
+public class AccountServiceImpl implements IAccountService {
+	private final AccountRepo accountRepo;
+	private final ClientRepo clientRepo;
+	private final RiskClient riskClient;
 
-	@Autowired
-	AccountRepo accountRepo;
-	@Autowired
-	ClientRepo clientRepo;
 
-    @Transactional
+	@Transactional
 	@Override
-	public CreditAccount createCreditAccount(CreditAccount credit, Long clientId) {
+	public Account createCreditAccount(CreditAccount credit, Long clientId) {
 		Clients client = clientRepo.findById(clientId).get();
-		credit.setAccountNumber(credit.accNRGenerator());
-		credit.creditCardGenerator();
-	    CreditAccount account = accountRepo.save(credit);
-	    client.addAccountToClient(account);
+		if (riskClient.isPassingCreditCheck(client.getFirstName())) {
+			credit.setAccountNumber(credit.accNRGenerator());
+			credit.creditCardGenerator();
+			Account account = accountRepo.save(credit);
+			client.addAccountToClient(account);
+//	        clientRepo.save(client);
 
-		return account;
+			return account;
+		} else {
+			throw new RuntimeException("Could not open account due to failing risk assessment");
+		}
+
 	}
+
 	@Transactional
 	@Override
-	public DebitAccount createDebitAccount(DebitAccount debit, Long clientId) {
+	public Account createDebitAccount(DebitAccount debit, Long clientId) {
 		Clients client = clientRepo.findById(clientId).get();
-		debit.setAccountNumber(debit.accNRGenerator());
-		DebitAccount account = accountRepo.save(debit);
-		client.addAccountToClient(account);
-		return account;
+		if (riskClient.isPassingCreditCheck(client.getFirstName())) {
+			debit.setAccountNumber(debit.accNRGenerator());
+			Account account = accountRepo.save(debit);
+			client.addAccountToClient(account);
+//		clientRepo.save(client);
+			return account;
+		} else {
+			throw new RuntimeException("Could not open account due to failing risk assessment");
+		}
+
 	}
+
 	@Transactional
 	@Override
-	public Account deposit(long amount, Long accountNumber, Long clientId) {
-		Clients c = clientRepo.findById(clientId).get();
-		Account account = accountRepo.findByAccountNumber(accountNumber);
+	public Account deposit(AccountDTO accountInfo) {
+		Clients c = clientRepo.findById(accountInfo.getClientId()).get();
+		Account account = accountRepo.findByAccountNumber(accountInfo.getAccountNumber());
 
-		if (c.getAccounts().contains(account)){
-			 account.deposit(amount);
+		if (c.getAccounts().contains(account)) {
+			account.deposit(accountInfo.getAmount());
 			return accountRepo.save(account);
+		} else {
+			throw new RuntimeException("Could not deposit due to failing matching acc number and holder");
+
 		}
-    	return null;
 	}
+
 	@Transactional
 	@Override
-	public Account withdraw(long amount, Long accountNumber, Long clientId) {
-		Clients c = clientRepo.findById(clientId).get();
-		Account account = accountRepo.findByAccountNumber(accountNumber);
+	public Account withdraw(AccountDTO accountInfo) {
+		Clients c = clientRepo.findById(accountInfo.getClientId()).get();
+		Account account = accountRepo.findByAccountNumber(accountInfo.getAccountNumber());
 
-		if (c.getAccounts().contains(account)){
-			account.withdraw(amount);
+		if (c.getAccounts().contains(account)) {
+			account.withdraw(accountInfo.getAmount());
 			return accountRepo.save(account);
+		} else {
+			throw new RuntimeException("Could not withdraw due to failing matching acc number and holder");
 		}
-		return null;
 	}
-
-
-//	public long withdraw(long amount , long balance) {
-//		if (amount > balance) throw new IllegalStateException("Your amount must be less than your balance");
-//		long newBalance = balance - amount;
-//		if (newBalance <= 0) throw new IllegalStateException("Balance cannot be less than 0");
-//		return balance - amount;
-//	}
-//
-//
-//	public long deposit(long amount, long balance) {
-//		if (amount <= 0) throw new IllegalStateException("Amount can not be 0 and less than it");
-//		return balance + amount;
-//	}
 }
